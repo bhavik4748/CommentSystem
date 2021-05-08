@@ -32,28 +32,30 @@ function Comment({ val, child, id, onSubmitHandler }) {
 function App() {
   let comments = null;
   const [commentState, setCommentState] = React.useState([...CommentArray]);
+  const [idCounter, setIdCounter] = React.useState(5);
 
   function submitHandler(event, id, val) {
     event.preventDefault();
     console.log('clicked', id);
-    AddComment(id, 'test');
+    AddComment(id, 'test',[...commentState]);
   }
 
-  function AddComment(id, val) {
-    let newC = [...commentState];
+  function AddComment(id, val, newC) {    
     for (let i = 0; i < newC.length; i++) {
       if (newC[i].id == id) {
-        newC[i].child.push({ 'id': i * 10, 'val': val, 'child': [] });
-        setCommentState(newC);
+        newC[i].child.push({ 'id': idCounter, 'val': val, 'child': [] });        
+        setIdCounter(idCounter + 1);
+      }else if(newC[i].child.length > 0){
+        AddComment(id, 'test', [...newC[i].child]);
       }
-
     }
+    setCommentState(newC);
   }
 
   comments = (commentState.map(c => {
     return (
-      <div>
-        <Comment key={c.id} id={c.id} val={c.val} child={c.child} onSubmitHandler={submitHandler} />
+      <div key={c.id}>
+        <Comment  id={c.id} val={c.val} child={c.child} onSubmitHandler={submitHandler} />
       </div>
     )
   }));
