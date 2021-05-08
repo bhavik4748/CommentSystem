@@ -3,9 +3,17 @@ import './App.css';
 import { CommentArray } from './commentArray';
 
 function Comment({ val, child, id, onSubmitHandler }) {
+  const [showTextArea, setShowTextArea]=React.useState(false);
   function localSubmitHandler(event) {
     event.preventDefault();
-    onSubmitHandler(event, id);
+    let textVal = event.target.firstChild.value;  
+     setShowTextArea(false);
+    onSubmitHandler(event, id, textVal);    
+  }
+
+  function buttonHandler(event){
+    event.preventDefault();
+    setShowTextArea(true);
   }
 
   let childComp = null;
@@ -16,15 +24,23 @@ function Comment({ val, child, id, onSubmitHandler }) {
       </div>
     )
   })
+
+  let textArea = null;
+  if(showTextArea)
+  textArea= ( <form  className="textarea" onSubmit={localSubmitHandler}>
+        <textarea ></textarea> <button>Submit</button>
+      </form>)
+
   return (
     <div className='commentDiv'>
-      <form className='commentparent' onSubmit={localSubmitHandler}>
+      <div className='commentparent'>
         <div>{val}</div>
-        <button>reply </button>
-      </form>
+        <button onClick={buttonHandler}>reply </button>
+      </div>
       <div className='childContainer'>
         {childComp}
       </div>
+     {textArea}
     </div>
   );
 }
@@ -37,16 +53,16 @@ function App() {
   function submitHandler(event, id, val) {
     event.preventDefault();
     console.log('clicked', id);
-    AddComment(id, 'test',[...commentState]);
+    AddComment(id, val, [...commentState]);
   }
 
-  function AddComment(id, val, newC) {    
+  function AddComment(id, val, newC) {
     for (let i = 0; i < newC.length; i++) {
       if (newC[i].id == id) {
-        newC[i].child.push({ 'id': idCounter, 'val': val, 'child': [] });        
+        newC[i].child.push({ 'id': idCounter, 'val': val, 'child': [] });
         setIdCounter(idCounter + 1);
-      }else if(newC[i].child.length > 0){
-        AddComment(id, 'test', [...newC[i].child]);
+      } else if (newC[i].child.length > 0) {
+        AddComment(id, val, [...newC[i].child]);
       }
     }
     setCommentState(newC);
@@ -55,7 +71,7 @@ function App() {
   comments = (commentState.map(c => {
     return (
       <div key={c.id}>
-        <Comment  id={c.id} val={c.val} child={c.child} onSubmitHandler={submitHandler} />
+        <Comment id={c.id} val={c.val} child={c.child} onSubmitHandler={submitHandler} />
       </div>
     )
   }));

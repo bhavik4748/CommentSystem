@@ -1,6 +1,9 @@
 .commentDiv{
+  margin-left:5px;
+}
 
-  margin:5px;
+.textarea{
+  margin-left:15px;
 }
 
 .commentparent{
