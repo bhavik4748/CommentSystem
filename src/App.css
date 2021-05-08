@@ -1,0 +1,18 @@
+.commentDiv{
+
+  margin:5px;
+}
+
+.commentparent{
+  display: flex;
+  margin:20px 10px;
+  padding:10px;
+  border: 1px solid;  
+}
+.commentparent button{
+  margin-left: 20px;
+}
+
+.childContainer{
+  margin-left:30px;
+}
